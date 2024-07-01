@@ -1,0 +1,143 @@
+React native can be used with both iOS and android.
+Advantages:  cross-platform compatibility, native components, hot reloading(changes in real time), strong community
+Support,  easy to learn.
+
+Expo is basically like create-react-app, or vite. It provides tools and services that simplify the development process.
+You don’t have to worry about configuring your dev environment or native dependencies.
+
+<Text></Text> is used instead of p and h tags.
+<View></View> is used instead of divs. It uses flex box by default.
+TouchableOpacity component. A button that fades when interacted with.
+ActivityIndicator. Spinner or loading indicator in app.
+Flatlist. Like map in react. It renders a long list of components to be scrolled efficiently. Larger lists, use Flatlist.
+Scrollview. A box that holds things and allows scrolling.
+SafeAreaView. Safe zone to render content where on any device it can be viewed. Won’t be blocked by home button or something.
+
+
+
+Let’s create an app! 
+THE SETUP
+1. Make a folder in desktop and drag it into vs code.
+2. Open up the docs for expo.github.io/router/docs.
+3. Type npx create-expo-app@latest -e with-router ./ (the ./ is for having this in the folder we are in) inside the terminal of vs code.
+4. Run npm install.
+5. Create a folder called app with the files index.js and _layout.js
+6. In _layout.js, we import Stack from react-native and make an arrow function called Home. Export default function.
+7. In index.js we import View and Text from react-native and return Text wrapped in View. Export default function.
+8. We need more dependencies. In the terminal type npm install expo-font axios react-native-dotenv
+  - expo-font is to add a custom font
+  - axios is for API requests
+  - react-native-dotenv is an external package to allow us to work with environment variables.
+9. Type npm start.
+10. From here, there is a mobile app called Expo Go to download. We can scan the QR code given and test our app!
+11. If we cannot start the app because of wifi, here are the steps to fix that....
+11a. Ctrl+C in the terminal to stop the app.
+11b. Type sudo npm install -g expo-cli. This installs the global expo cli package to run the application on.
+11c. Then type expo-cli start --tunnel.
+12. This doesn't work. Type npx expo-doctor
+13. Then type npx expo install --check to see what's wrong.
+14. Then the terminal will fix your dependencies for you.
+15. Then type npx expo start
+16. Still didn't work.
+17. Type sudo npm install --global @expo/ngrok@^4.1.0
+18. Type npm install uuid@latest
+19. Make sure in package.json it says expo start --tunnel
+20. Run npm run start
+
+None of this works. I'm going to emulate an iOS app from my computer instead. I'll try this out on my
+wifi at home I guess. I downloaded XCode
+
+I finally got the app to display in a phone.
+
+I had to download assets, components, constants, and styles from the github repository from the tutorial.
+The styles will be provided, but not the logic. 
+
+Let's start.
+
+---
+
+1. We go into app/index.js and add...
+Stack and useRouter from expo-router
+useState from react
+View, Scrollview, and SafeAreaView from react native.
+
+2. Define a router and wrap everything in a SafeAreaView tag.
+So within the home function:
+  const Home = useRouter();
+
+Then we have a self closing <Stack.Screen /> wrapped in a <SafeAreaView></SafeAreaView> tag.
+
+2a. Let's give some styles to SafeAreaView. It's just an attribute of style within the first tag.
+style={{ flex: 1, backgroundColor: ---}}
+
+3. Within Stack.Screen, we give it an attribute of options. Options is written like
+options={{}}. First, we tackle some header settings.
+
+3a. headerStyle: { backgroundColor: ---}. Changes color of the header. We can import
+an object from a different folder with a bunch of preselected color schemes.
+
+3b. headerShadowVisible: true/false. Just shows an underline underneath the header or not.
+
+3c. headerLeft: () => (). This object key takes a component within an arrow function. In our app,
+we put in a component called ScreenHeaderBtn. It seems headerLeft is just something that renders
+to the left of the header.
+
+3d. headerRight: () => (). Same deal. Something that renders to the right of the header.
+
+3e. headerTitle: "". Gets rid of the "index" that is in the header by default. Or, you can name
+it something else.
+
+4. Now that we've done some work to the header, let's work on the body, and make it scrollable.
+Add a <ScrollView></ScrollView> tag underneath the <Stack.Screen /> tag. Set an attribute of
+showsVerticalScrollIndicator={false}. Users should know to scroll.
+
+4a. Let's add a <View></View> tag within the ScrollView. This View tag shall have some styles,
+like flex: 1, and padding: SIZES.medium. Having objects imported to refer to in styling helps a lot.
+
+4b. Within the <View></View> tag, we'll have some components called Welcome, popularjobs,
+and nearbyjobs in there.
+
+5. Let's work a little on the header now. There are going to be buttons in the header
+on either side. Inside a ScreenHeaderBtn component, we import TouchableOpacity and Image from
+react-native. Then we import styles from that folder, and we import React from 'react'.
+Then in a ScreenHeaderBtn arrow function, we return an <Image /> tag wrapped
+inside of a <TouchableOpacity></TouchableOpacity> tag. This image tag will have a source that we
+take through a prop. Inside headerLeft and headerRight in app/index.js, we've called this component. We should have
+a iconUrl prop to pass through. The styling properties given to the image can be found within the stylesheet.js
+page. There some complicated stuff in there, but basically it has CSS within a JS object that we can call
+inside curly brackets in style={}.
+
+5a. We also give the TouchableOpacity tag a style too.
+style={styles.btnContainer}. These are weird styles because they are premade already in a js file.
+
+5b. The TouchableOpacity also takes a function once its pressed. So we give it an onPress attribute that takes
+a handlePress prop. We won't pass in this prop until later.
+
+5c. headerLeft displays a hamburger menu, and headerRight will display a profile picture. The iconUrl in
+headerRight will have a different image.
+
+6. I think header stuff is cool for now. Let's focus on the Welcome component. Within the welcome component code,
+let's import useState from 'react', useRouter from 'expo-router', 
+styles from the js stylesheet that should be in the same folder, icons and SIZES from
+the constants folder, and a couple of
+things from 'react-native':
+View (div)
+Text (p)
+TextInput (input)
+TouchableOpacity
+Image
+Flatlist.
+
+6a. Let's define our router within the Welcome arrow function.
+const router = useRouter();
+
+**FOR THE RECORD, I think this person made these js files for all the stylings 
+AFTER fiddling around with having the styles done inline. It's kinda crazy to be doing
+these styles like this.
+
+6b. Let's go into the return statment and wrap a view inside a view. The inner view has
+a width of 100%. Inside the inner view is a text element that says Hello Nick. To this text
+element we give it a styling of a font, 20px sizing, and a blackish color.
+
+6c. Let's have another Text element with a message like "Find your perfect job"
+with a bold styling, 24 px sizing, slightly different color, and margin top of 2.
