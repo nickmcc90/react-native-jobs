@@ -8,6 +8,8 @@ import Welcome from '../components/home/welcome/Welcome';
 import Popularjobs from '../components/home/popular/Popularjobs';
 import Nearbyjobs from '../components/home/nearby/Nearbyjobs';
 
+
+
 const Home = () => {
 
   const router = useRouter();

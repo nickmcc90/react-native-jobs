@@ -297,7 +297,7 @@ const useFetch = (endpoint) => {
 
  const options = {
   method: 'GET',
-  url: `https://jsearch.p.rapidapi.com/search/${endpoint}`,
+  url: `https://jsearch.p.rapidapi.com/${endpoint}`,
   params: {
     query: 'Node.js developer in New-York,USA',
     page: '1',
@@ -323,8 +323,102 @@ import { RAPID_API_KEY } from '@env'
 then
 const rapidApiKey = RAPID_API_KEY
 
+**The env file stuff wasn't working, so we used the code straight up in the file, oh well.
+
 Now we can use this variable.
 
 10e. Instead of the params being static like they are above, we can pass a variable to them.
 
-params: { ...query } (with query being a parameter in the useFetch arrow function)
+params: { ...query } (with query being a parameter in the useFetch arrow function).
+
+
+10f. Let's have an async fetchData function at the bottom. Here, we will setIsLoading(true) and use
+a try, catch, finally structure. Try to await the axios.request(options), catch errors, finally set loading
+as false.
+ const fetchData = async () => {
+  setIsLoading(true);
+
+  try {
+    const response = await axios.request(options)
+    setData(response.data.data)
+    setIsLoading(false);
+  } catch (error) {
+    setError(error)
+    alert("There is an error")
+  } finally {
+    setIsLoading(false)
+  }
+ }
+
+10g. Have a useEffect at the bottom of the main arrow function where we run this fetchdata function. No
+dependencies in the array. There can be a refetch arrow function after this just for debugging.
+
+10h. Then from this overall useFetch arrow function, we return the state variables and the refetch
+function.
+
+11. Let's import this file into the Popular jobs component now. This means we can erase the isLoading
+and the error variables that we had. We can destructure the return variables from useFetch inside of the
+PopularJobs arrow function in the beginning.
+
+11a. useFetch takes two arguments so the first one is 'search', because that's our endpoint, and
+the query shall be anything, but inside of an object. This is because we use the spread operator
+in useFetch, so we will spread out the key and values we pass in. Like this in the popjobs arrow function:
+  const { data, isLoading, error, refetch } = useFetch
+  ('search', {
+    query: 'React developer',
+    num_pages: 1
+  })
+
+This does it for loading in from the API.
+
+12. Let's make the PopularJobCards render into the page. Let's get our imports
+right:
+import { View, Text, TouchableOpacity, Image } from 'react-native'
+
+12a. We want to return a button for every card. It seems the structure will be a button container.
+Inside the button will be an image wrapped in another button, and a text box. There is a lot to note about the styling
+of these buttons and items. Mostly about having state variables equal to ones that you choose. We will
+discuss this later, after the UI is made.
+
+12b. Notably, the text element has an attribute of numberOfLines={1}. This is so that whatever is in the
+text appears on one line.
+
+12c. Inside of the overall button, and next to the inside button and text element, let's add a view. This
+view will display a text element with the job title.
+
+12d. Next, we can put another text element in that view that displays the job location.
+
+12e. Some of the companies don't have logos, so we need to make a utility function to check for this. Let's name
+create a folder called utils with a file called index.js. If there isn't a company logo, then there is a null value.
+We make a export const arrow function that returns a boolean true if the url is not null, and a boolean false
+if the url is null. We import this function into our Job card component. Within the source curly brackets,
+we use a ternary operator by first calling the arrow function we imported. If its true, have the source
+equal to the logo, and if false, have a https image that can default load in. Here's the arrow function:
+export const checkImageUrl = (url) => {
+  if(url !== null){
+    return true
+  } else {
+    return false
+  }
+}
+
+Here's the import statement in job card:
+import { checkImageUrl } from '../../../../utils';
+
+And here's the logic of ternary:
+        <Image 
+          source={{ uri: checkImageUrl(item.employer_logo)
+          ? item.employer_logo : "random https image"}}
+        />
+
+Bow bow.
+
+In the video, instead of utilizing null values, the guy found some function to check the url that returns
+true or false. Here's the timestamp for that and the video url.
+<timestamp 1:11:34? url: https://www.youtube.com/watch?v=mJ3bGvy0WAY&t=3702s
+
+
+
+
+
+13. Let's work on the UI of the nearby jobs component.
