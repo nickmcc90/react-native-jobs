@@ -140,4 +140,191 @@ a width of 100%. Inside the inner view is a text element that says Hello Nick. T
 element we give it a styling of a font, 20px sizing, and a blackish color.
 
 6c. Let's have another Text element with a message like "Find your perfect job"
-with a bold styling, 24 px sizing, slightly different color, and margin top of 2.
+with a bold styling, 24px sizing, slightly different color, and margin top of 2.
+
+6d. Let's have a separate view within another view. Inside all this will be a text input. The outer div
+is to have flex-direction row and text centering, and margining. The inner div is to change the backgroundColor
+and border radius.
+
+6e. We can do a custom font for the text input. Go into _layout.js and import useCallback from react,
+useFonts from expo-font, and " import * as SplashScreen from 'expo-splash-screen' ". This last thing
+allows a splash screen to remain on the page until everything loads in. Don't forget to have
+SplashScreen.preventAutoHideAsync() outside of the Layout arrow function so that it can run
+primarily.
+
+6f. Now, within the layout arrow function, we load our fonts with the useFonts function (look to _layout.js)
+for this syntax. After this, we make a conditional statment that only when the fonts are loaded, we show the
+homescreen. This is with the useCallback function we imported, that acts as a useEffect type thing. In the
+dependencies array, we put the fonts.
+
+  const [fontsLoaded] = useFonts({
+    DMBold: require("../assets/fonts/DMSans-Bold.ttf"),
+    DMMedium: require("../assets/fonts/DMSans-Medium.ttf"),
+    DMRegular: require("../assets/fonts/DMSans-Regular.ttf")
+  })
+
+  const onLayoutRootView = useCallback(async () => {
+    if(fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded])
+
+6g. Then we add this inside the overall arrow function:
+  if(!fontsLoaded) return null
+
+  return <Stack onLayout={onLayoutRootView}/>;
+We do all this to ensure that our fonts load where we choose them to.
+
+6h. Now we add attributes to the TextInput.
+value =""   what text is in the bar at any moment (we will assign a state variable to this.)
+onChange={() => {}}   a function to run once the bar changes (text is put in)
+placeholder=""  what the bar says without text in in
+
+7. Let's put a search button next to the search bar. This is putting an Image inside a 
+TouchableOpacity within the View that is flex-dir row that holds the search bar, and now this
+button. We give the image and the button some good styling. The image resizeMode attribute should
+be set to "contain". We add an empty callback function to the TouchableOpacity that we will fill in
+later. onPress={() => {}}
+
+8. Next, we'll have a Flatlist tag inside a view tag underneath the view container for the search bar
+and search button. The flatlist will display 3 different types of data, which we will declare on top.
+
+8a. We make a variable that stores different job types above the welcome arrow function. We then pass
+this into the flatlist tag with an attribute of data={jobTypes}
+
+8b. Now we need to render each jobType. Within a renderItem attribute, we destructure each item into
+a button card with text in it.
+
+8c. Now we can add styling to the button border with a useState variable. Let's make a useState variable
+inside the total arrow function that stores whether a button has been clicked or not. We save this
+variable equal to the String value of the button itself. So within the styling of each button
+we map to the page, we set the border color equal to a boolean value of whether or not our state variable
+equals a button text. We can get the state variable to equal the button text by clicking a certain button.
+**IMPORTANT TRICK
+
+8d. Also within the onPress of a button, we want to route the user to the search page of that type of job.
+This is done with router.push(``), where a template string with the specific job is put in.
+
+8e. Along with the border styling to be active when a job is selected, we can have the text of all the non-clicked
+buttons be faded. This is done with the same trick: a boolean value for the font color of everything.
+
+8f. Within FlatList, you need to add an additional props besides data and renderItem. keyExtractor grabs
+a unique key for each item.
+keyExtractor={item => item}
+Also, having 
+            contentContainerStyle={{columnGap: SIZES.small}}
+            horizontal
+
+gives the options a bubble type appearance in the app.
+
+Now that some of the UI is done, we are going to utilize an API call within popular jobs to show
+popular jobs.
+
+9. Let's get our imports situated within popular jobs.
+import { useState } from 'react'
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator  } from 'react-native' (we have a new thing called ActivityIndicator here)
+import { useRouter } from 'expo-router'
+
+import styles from "./popularjobs.style";
+import { COLORS, SIZES } from '../../../constants'
+import PopularJobCard from '../../common/cards/popular/PopularJobCard' (we are gonna use a card to populate things.)
+
+
+9a. Inside the popular jobs arrow function, we define our router
+const router = useRouter();
+
+9b. Now its time to focus on the return statement. Let's have an overall view as the container. Then,
+a header View inside that with a text element saying Popular jobs, and a button element saying show all.
+
+9c. Now that the header view is done, let's have a cardcontainer view underneath. Within this view,
+we wanna show a loading icon while the we are fetching data. So, we must....
+
+9ca. Create a variable in the total arrow function called isLoading to start.
+const isLoading = false;
+
+Now, we create a conditional statement. If we are loading, we display a <ActivityIndicator />. If not,
+then we check if we have an error. If so, display some error text. If no error, then we can display our
+Flatlist.
+        {isLoading ? (
+          <ActivityIndicator size='large' colors={COLORS.primary} />
+        ) : error ? (
+          <Text>Something went wrong...</Text>
+        ) : <FlatList
+        
+        /> }
+
+9d. In our flatlist, we can put mock data, like an array of 1,2,3,4, and render each item
+to a PopularJobCard where we display the data. This is just for starters. I've shown how to do this
+before above in number 8.
+
+**By the way, flex boxes default to flex-direction: column instead of row.
+
+9e. Then we add our keyExtractor which will be item => item?.job_id once we actually import
+data from the API.
+
+9f. We want to do the contentContainerStyle and horizontal stuff like before here:
+          contentContainerStyle={ {columnGap: SIZES.medium} }
+          horizontal
+
+We are going to eventually make the cards look a lot better, but lets get into API fetching.
+
+10. Create a folder called hooks, and a file in there called useFetch.js
+
+10a. Let's get our imports down pat.
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+
+10b. Then, create the useFetch arrow function with useState variables inside of..
+data set equal to an emptyarray
+isLoading set equal to false
+error set equal to null
+Then export default useFetch at the bottom.
+** we are creating these to initialize them.
+
+10c. Now we go back to rapidAPI, get our key and the endpoint, and make
+a call to the API to fetch data for the developer jobs. Once we subscribe to a basic
+plan, we can find our API 'JSearch', and have our target be Node.js and our client be
+Axios when we test a search endpoint.
+
+10d. Let's paste in our options object. We want to alter the url to have template strings
+and take a variable, so that we can change our endpoint like such...
+
+const useFetch = (endpoint) => {
+
+ const [data, setData] = useState([]);
+ const [isloading, setIsLoading] = useState(false);
+ const [error, setError] = useState(null);
+
+ const options = {
+  method: 'GET',
+  url: `https://jsearch.p.rapidapi.com/search/${endpoint}`,
+  params: {
+    query: 'Node.js developer in New-York,USA',
+    page: '1',
+    num_pages: '1',
+    date_posted: 'all'
+  },
+  headers: {
+    'x-rapidapi-key': rapidApiKey,
+    'x-rapidapi-host': 'jsearch.p.rapidapi.com'
+  }
+};
+
+}
+
+You should notice that the key given in headers is not visible. We need to set up our key in a .env file.
+Make sure the .env file is in the root directory.
+
+We set up something like...
+RAPID_API_KEY = thekey
+
+Then we import it into useFetch.js...
+import { RAPID_API_KEY } from '@env'
+then
+const rapidApiKey = RAPID_API_KEY
+
+Now we can use this variable.
+
+10e. Instead of the params being static like they are above, we can pass a variable to them.
+
+params: { ...query } (with query being a parameter in the useFetch arrow function)

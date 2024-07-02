@@ -44,3 +44,6 @@ const Home = () => {
 export default Home;
 
 // timestamp: 37:06. Working on the welcome tag.
+
+
+// timestamp: 1:01:30. Working on useFetch Hook.
