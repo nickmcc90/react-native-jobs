@@ -17,32 +17,32 @@ SafeAreaView. Safe zone to render content where on any device it can be viewed. 
 
 Let’s create an app! 
 THE SETUP
-1. Make a folder in desktop and drag it into vs code.
-2. Open up the docs for expo.github.io/router/docs.
-3. Type npx create-expo-app@latest -e with-router ./ (the ./ is for having this in the folder we are in) inside the terminal of vs code.
-4. Run npm install.
-5. Create a folder called app with the files index.js and _layout.js
-6. In _layout.js, we import Stack from react-native and make an arrow function called Home. Export default function.
-7. In index.js we import View and Text from react-native and return Text wrapped in View. Export default function.
-8. We need more dependencies. In the terminal type npm install expo-font axios react-native-dotenv
+bc1. Make a folder in desktop and drag it into vs code.
+bc2. Open up the docs for expo.github.io/router/docs.
+bc3. Type npx create-expo-app@latest -e with-router ./ (the ./ is for having this in the folder we are in) inside the terminal of vs code.
+bc4. Run npm install.
+bc5. Create a folder called app with the files index.js and _layout.js
+bc6. In _layout.js, we import Stack from react-native and make an arrow function called Home. Export default function.
+bc7. In index.js we import View and Text from react-native and return Text wrapped in View. Export default function.
+bc8. We need more dependencies. In the terminal type npm install expo-font axios react-native-dotenv
   - expo-font is to add a custom font
   - axios is for API requests
   - react-native-dotenv is an external package to allow us to work with environment variables.
-9. Type npm start.
-10. From here, there is a mobile app called Expo Go to download. We can scan the QR code given and test our app!
-11. If we cannot start the app because of wifi, here are the steps to fix that....
-11a. Ctrl+C in the terminal to stop the app.
-11b. Type sudo npm install -g expo-cli. This installs the global expo cli package to run the application on.
-11c. Then type expo-cli start --tunnel.
-12. This doesn't work. Type npx expo-doctor
-13. Then type npx expo install --check to see what's wrong.
-14. Then the terminal will fix your dependencies for you.
-15. Then type npx expo start
-16. Still didn't work.
-17. Type sudo npm install --global @expo/ngrok@^4.1.0
-18. Type npm install uuid@latest
-19. Make sure in package.json it says expo start --tunnel
-20. Run npm run start
+bc9. Type npm start.
+bc10. From here, there is a mobile app called Expo Go to download. We can scan the QR code given and test our app!
+bc11. If we cannot start the app because of wifi, here are the steps to fix that....
+bc11a. Ctrl+C in the terminal to stop the app.
+bc11b. Type sudo npm install -g expo-cli. This installs the global expo cli package to run the application on.
+bc11c. Then type expo-cli start --tunnel.
+bc12. This doesn't work. Type npx expo-doctor
+bc13. Then type npx expo install --check to see what's wrong.
+bc14. Then the terminal will fix your dependencies for you.
+bc15. Then type npx expo start
+bc16. Still didn't work.
+bc17. Type sudo npm install --global @expo/ngrok@^4.1.0
+bc18. Type npm install uuid@latest
+bc19. Make sure in package.json it says expo start --tunnel
+bc20. Run npm run start
 
 None of this works. I'm going to emulate an iOS app from my computer instead. I'll try this out on my
 wifi at home I guess. I downloaded XCode
@@ -452,7 +452,7 @@ Here, make a file called [id].js. We can type 'rafce' to instantly make an arrow
 to import the following:
 import { useCallback, useState } from 'react'
 import { Text, View, SafeAreaView, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
-import { Stack, useRouter, useSearchParams } from 'expo-router'
+import { Stack, useRouter, useLocalSearchParams } from 'expo-router'
 
 RefreshControl is a new thing we will be dealing with.
 
@@ -465,3 +465,159 @@ JobTabs
 ScreenHeaderBtn
 Specifics
 
+14a. Inside the arrow function, we will have
+const params = useLocalSearchParams();
+to get the specific id of the job details page we are on so that we can grab data on that job.
+We also want to get the router info, as shown in 6a for example. useLocalSearchParams works
+because when we click on a nearby jobs button, the handleNavigate pushes us to a route with
+the job_id in the path. The useLocalSearchParams grabs this unique that we can use in our
+query body in 14b.
+
+14b. Let's gather the variables used in useFetch into the main arrow function as well. For the arguments
+of useFetch, instead of having 'search' as the endpoint, we will have 'job-details' as the endpoint, and
+pass through the job_id which is grabbed by params.id
+
+14c. Now we can get to displaying some stuff in the return statement. Let's wrap a Stack.screen tag
+inside a safeareaview tag. The safeareaview tag can have flex: 1, and a backgroundColor.
+
+14d. Filling in the options attribute for the Stack.screen tag is like the process we took in 2a
+and 3a through 3e. The only difference is
+headerBackVisible: false
+This removes the back arrow from the header.
+
+14e. As was said in 14d, the options attributes are the same for the most part in that we will
+be reusing the same header button logic. This time for handle press in the left button, we want to
+enable router.back().
+
+14f. Underneath the Stack.screen self closing tag, we have a react fragment, and inside we put a 
+<ScrollView></ScrollView> tag.
+We set showsVerticalScrollIndicator to false for reasons described in step 4.
+We also set the attribute within ScrollView of refreshControl equal to a component called
+<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>
+
+Basically the refreshControl attribute in scrollview is meant to refresh the data incase we don't
+get it the first time upon loading in. The refreshing process will be dependent on some state variables
+and functions we make. Within the <RefreshControl/> component, we pass a state variable to the refreshing
+attribute, and a function to the onRefresh. The refreshing state variable will be boolean.
+
+With that said, let's make a useState variable for refreshing and setRefreshing, and let's pre make a 
+function called onRefresh to make later.
+
+14g. In the scroll view, we want to know if we are loading, much like when we used the useFetch stuff
+for the popular and nearby jobs. Let's do a whole conditional statment where we display things based
+on the state variables within useFetch. Look to step 9ca for details on logic here.
+
+In addition to the logic in 9ca, we want to check if the data.length === 0. If it is, then we display
+text that says "no data". If we are good and have data, then we can display all of our components
+that we imported like <Company /> and <JobTabs /> within a <View></View> tag.
+
+14h. Let's add props to <Company /> and change up the company component to accept these props.
+
+14i. For the imports of company, I think we get the jist of what needs to be imported.
+Stuff from react-native, styles, icons, and in this case, our utility function checkImageUrl described
+in step 12e.
+
+14j. The company card structure has a main view that holds everything. Inside that main
+view, there's a view that holds the company logo. A view that
+holds the job title. And finally, a view that is a flex-direction row that holds two things:
+The compnay name
+Another view that's a flex-row with a pin drop image and company location inside.
+
+15. Now we can work on the <JobTabs /> component, where we can find out about the job, qualifications,
+responsibilities, etc. The way that this will work is we will have 3 buttons that show different
+tabs. When we click on one, it will highlight. Also when we click on one, a function within
+job-details will activate through a state variable and display paragraphs of text relating to the tab 
+that's been selected. So it'll be like 
+<company />
+<jobtabs />
+{displayTabContent()}
+
+Where displayTabContent renders based on what is selected in <jobtabs />.
+
+I believe I know how to create the sliding tab buttons and make them highlightable, as well as creating
+a function that operates upon a state variable that changes in relation to the sliding tabs. I'll put down
+the steps in this .txt document that I referenced to do this part.
+
+I did this part without needing to see any steps. I had a view with a flatlist inside that had
+attributes of:
+data of tabs
+a keyExtractor
+horizontal
+contentContainerStyle with column gap small
+renderItems={({ item }) => ()}
+Inside render items, just text wrapped in a button.
+The onPress of the button changed the activeTab state variable passed in.
+The styling was already done where name === activeTab ? "specific bckColor" : "normal bckColor"
+
+Then I made the function in Job details and learned about how to structure switch cases.
+This is the structure:
+ const displayTabContent = () => {
+    switch (activeTab) {
+      case (tabs[0]):
+      case (tabs[1]):
+      case (tabs[2]):
+    }
+  }
+The cases will have return statements.
+
+16. Within the displayTabContent() arrow function, let's work on the case where
+they click qualifications the tab.
+We will return props to a <Specifics /> component.
+
+16a. Let's work on the <Specifics /> component.
+
+16b. The Specifics structure goes like this:
+We have an main view to contain everything.
+Inside that view we have two components, a text of the job title, and a bullet point list of qualifications.
+The bullet point list is a this structure:
+A main view.
+Inside, a map function to get through all quals.
+Inside the map, a view to keep each bullet point that spawns on top of each other. This view is flex-row for its contents.
+Inside the flex-row view, a CSS bullet point, and the qualification.
+
+We want to give the view inside the map function a unique key of key={item+index}
+
+17. Let's move to the About section. This is going to display the <JobAbout /> component. The JobAbout
+component will only take a prop of { info } and we display this info inside a text tag that's inside a view
+tag. The overall JobAbout component structure is:
+Main view tag
+Inside that, a text tag and a view tag. 
+The text tag just says 'about the job'
+The view tag is like described before: there's text in there.
+
+The text isn't formatted when we display the info section. Hmm.
+
+18. The responsibilities section is the same as qualifications! Just change the API call.
+
+19. Last thing to do for the job details page is to put an apply button that routes us to the
+browser, and to the job listing.
+
+19a. The <JobFooter /> component has these buttons. We put this component outside of the ScrollView
+so that it can be at the bottom of the page the whole time.
+
+20. There's the option to implement the localStorage equivalent of favoriting jobs in native.
+
+21. The job details page is complete.
+
+22. Now we can add the search functionality. When we type react, we want to click and get react
+only jobs. We can do this logic in the welcome component.
+
+22a. To implement the searching, we need a state variable in index.js that captures the search Term.
+We declare this variable inside index.js, pass it into the Welcome tab, grab the state there, and direct
+the user to a search page that we haven't created yet with a handleClick function to be put on the search
+button.
+router.push(`search/${searchTerm})
+
+22b. That means the value of text input is searchTerm, and the
+onChange={(text) => setSearchTerm(text)}
+
+In react, you need e.target.value
+
+22c. Make sure the search button has the handleClick functionality.
+
+
+23. We need to make a search folder inside of the app folder with a file named [id].js
+This will be another dynamic route that will be like the homepage, but we will update our query
+requested based on the useLocalSearchParams id for jobs based on the search bar value. The nearby
+jobs component is a vertical scroll type of component, and that's what we will use for this page.
+This will be like step 14.
