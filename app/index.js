@@ -9,7 +9,6 @@ import Popularjobs from '../components/home/popular/Popularjobs';
 import Nearbyjobs from '../components/home/nearby/Nearbyjobs';
 
 
-
 const Home = () => {
 
   const router = useRouter();
@@ -49,3 +48,5 @@ export default Home;
 
 
 // timestamp: 1:01:30. Working on useFetch Hook.
+
+// timestamp: 1:25:50. Working on the job-details page.

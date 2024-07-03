@@ -421,4 +421,47 @@ true or false. Here's the timestamp for that and the video url.
 
 
 
-13. Let's work on the UI of the nearby jobs component.
+13. Let's work on the UI of the nearby jobs component. We already made the useFetch function, so
+calling data should be easy. Instead of starting fresh, we can copy and paste our popular jobs component
+to this. I'm definetly seeing code that is being duplicated that could easily be components, but I'll let
+it slide for now and come back to that later.
+
+13a. Things we are changing about nearbyjobs:
+We don't need a flatlist import
+We don't need a useState import
+Change the styling and NearbyJobCard import paths
+We only need COLORS from constants.
+Change the main arrow function and the export default names to nearby.
+Change some text in the header to nearby.
+Instead of a flatlist, we do a map function.
+
+13b. We want to map a NearbyJobCard for every data point. The NearbyJobCard takes
+the props of job, key (to have unique cards), and handleNavigate (to redirect the page upon clicking.)
+The key is a template string with `nearby-job-${job?.job_id} for a unique key.
+Don't worry about the router.push() stuff, because the page routing section of this tutorial will go
+over what exactly goes in that box.
+The this card is going to be the same as a popular card. Check nearbycard for differences.
+The nearby jobs hold the same information as the popular cards.
+
+
+** We still haven't solved the selectedJobs variable within the PopularJobs component.
+
+
+14. Let's work on the job details page. Go into the app folder and make a new folder called job-details.
+Here, make a file called [id].js. We can type 'rafce' to instantly make an arrow function. We are going
+to import the following:
+import { useCallback, useState } from 'react'
+import { Text, View, SafeAreaView, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
+import { Stack, useRouter, useSearchParams } from 'expo-router'
+
+RefreshControl is a new thing we will be dealing with.
+
+We will also be importing a few components, some styles, and the useFetch hook function.
+Here are the components we are importing:
+Company
+JobAbout
+JobFooter
+JobTabs
+ScreenHeaderBtn
+Specifics
+
