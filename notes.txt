@@ -177,7 +177,7 @@ We do all this to ensure that our fonts load where we choose them to.
 
 6h. Now we add attributes to the TextInput.
 value =""   what text is in the bar at any moment (we will assign a state variable to this.)
-onChange={() => {}}   a function to run once the bar changes (text is put in)
+onChangeText={() => {}}   a function to run once the bar changes (text is put in)
 placeholder=""  what the bar says without text in in
 
 7. Let's put a search button next to the search bar. This is putting an Image inside a 
@@ -470,8 +470,10 @@ const params = useLocalSearchParams();
 to get the specific id of the job details page we are on so that we can grab data on that job.
 We also want to get the router info, as shown in 6a for example. useLocalSearchParams works
 because when we click on a nearby jobs button, the handleNavigate pushes us to a route with
-the job_id in the path. The useLocalSearchParams grabs this unique that we can use in our
+the job_id in the path. The useLocalSearchParams grabs this unique id that we can use in our
 query body in 14b.
+
+14aa. Don't forget the const router = useRouter()
 
 14b. Let's gather the variables used in useFetch into the main arrow function as well. For the arguments
 of useFetch, instead of having 'search' as the endpoint, we will have 'job-details' as the endpoint, and
@@ -609,7 +611,7 @@ button.
 router.push(`search/${searchTerm})
 
 22b. That means the value of text input is searchTerm, and the
-onChange={(text) => setSearchTerm(text)}
+onChangeText={(text) => setSearchTerm(text)}
 
 In react, you need e.target.value
 
@@ -621,3 +623,6 @@ This will be another dynamic route that will be like the homepage, but we will u
 requested based on the useLocalSearchParams id for jobs based on the search bar value. The nearby
 jobs component is a vertical scroll type of component, and that's what we will use for this page.
 This will be like step 14.
+
+The final search page should have full pagination where when you click on a next page button, it loads
+the next content to a limit. And when you click on a job button, it leads you to the job-details page.

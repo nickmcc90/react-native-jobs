@@ -59,3 +59,8 @@ export default Home;
 // timestamp: 1:01:30. Working on useFetch Hook.
 
 // timestamp: 1:25:50. Working on the job-details page.
+
+
+// timestamp: 2:06:06. About to try my hand at making the search page per my
+// notes on the job-details page, and then check it with the search page that can 
+// be found in his github repository.
