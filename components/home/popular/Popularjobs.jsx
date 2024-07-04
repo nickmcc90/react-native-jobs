@@ -17,8 +17,11 @@ const Popularjobs = () => {
     num_pages: 1
   })
 
+  const [selectedJob, setSelectedJob] = useState();
+
   const handleCardPress = (item) => {
     router.push(`/job-details/${item.job_id}`)
+    setSelectedJob(item)
   }
 
 
@@ -35,12 +38,13 @@ const Popularjobs = () => {
         {isLoading ? (
           <ActivityIndicator size='large' colors={COLORS.primary} />
         ) : error ? (
-          <Text>Something went wrong bro</Text>
+          <Text>Ran out of API calls</Text>
         ) : <FlatList
           data={data}
           renderItem={({ item }) => (
             <PopularJobCard 
               item={item}
+              selectedJob={selectedJob}
               handleCardPress={handleCardPress}
             />
           )}

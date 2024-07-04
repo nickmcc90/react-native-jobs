@@ -353,6 +353,13 @@ as false.
 10g. Have a useEffect at the bottom of the main arrow function where we run this fetchdata function. No
 dependencies in the array. There can be a refetch arrow function after this just for debugging.
 
+ const refetch = () => {
+  setIsLoading(true);
+  fetchData();
+ }
+
+ fetchData is the async arrow function with the try catch finally and await response in there.
+
 10h. Then from this overall useFetch arrow function, we return the state variables and the refetch
 function.
 
@@ -626,3 +633,112 @@ This will be like step 14.
 
 The final search page should have full pagination where when you click on a next page button, it loads
 the next content to a limit. And when you click on a job button, it leads you to the job-details page.
+
+
+By the way, inside a closing FlatList tag, 
+ListHeaderComponent={() => ()}
+ListFooterComponent={() => ()}
+are for one time rendering within a FlatList renderItem rendering. Very helpful.
+
+
+
+FINAL NOTES FOR MAKING THIS PROJECT
+With a search page that loads results, with pages that flip to more results, it is best to have
+an API call within the same file inside a function. You would have the pages set to a state variable.
+This is so you can call this API call function and change the query statement to include a different page.
+
+Basics:
+
+**don't forget to import axios from 'axios'
+
+const Search () => {
+
+  *router statement
+  *useLocalSearchParams statement
+
+  *state variables, for loading, error, data, and pages
+
+  const handleSearch = async () => {
+    setLoading(true)    // we are loading now
+    setData([])       // erase data with each call because it'll be from a different page
+
+    try {
+      const options {
+        **query params,
+        notably:
+
+        params: {
+          query: params.id,         // params is the variable associated with useLocalSearchParams
+          page: page.toString()     // uses the state variable page number, turns it to a string so it works.
+        }
+      }
+
+      const response = await axios.request(options)
+      setData(response.data.data)
+    } catch {
+      setError(error)
+    } finally {
+      setLoading(false)  // no more loading
+    }
+
+  }
+
+  const handlePage () => {}    **this takes the direction we are heading. Has a conditional statement to
+                                check if we are trying to go left but we are page one. We always set the page
+                                to a new number and run handleSearch to reload data with the new page.
+}
+
+
+If we have any trobule making this call, look at step 10 for how to make useFetch.
+
+Notes on making a stylesheet:
+The name is always followed by .style.js
+We import { StyleSheet } from "react-native-web";
+We do const styles = StyleSheet.create({})
+Inside the object, we do the styles.
+Like this, 
+const styles = StyleSheet.create({
+  everythingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginTop: 20
+  }
+})
+
+If we have a class that takes a variable, it looks like this:
+
+const styles = StyleSheet.create({
+  buttonImage: (dimension) => ({
+    height: dimension,
+    width: dimension
+  })
+})
+
+Having the style sheet in the same folder makes it easy.
+
+
+We implemented the refetch that we made from useFetch.js at the last moment. In job-details, we had
+a <ScrollView> with a refreshControl attribute of a <RefreshControl> tag. The refreshcontrol tag takes
+two attributes, refreshing (takes boolean) and onRefresh (takes function). We made a onRefresh function
+that used a callback arrow function to set our boolean state variable to true, run refetch (see step), then set
+the variable to false.
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true)
+    refetch();
+    setRefreshing(false)
+  })
+
+How does this function run in the first place when refreshing is set to false initally? I think it just
+knows when nothing pops up.
+
+
+Apart from using up all my API calls, I feel like I have a good grasp of React native and
+making mobile apps. I even tried making a style sheet myself and get it pretty much. Let's
+move on to my own idea for a mobile app.
+
+
+---DEPLOYING THE APP---
+Read the https://docs.expo.dev/eas-update/migrate-from-classic-updates/
+documentation on how to do this.

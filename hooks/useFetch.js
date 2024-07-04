@@ -20,7 +20,7 @@ const useFetch = (endpoint, query) => {
     'x-rapidapi-key': RAPID_API_KEY,
     'x-rapidapi-host': 'jsearch.p.rapidapi.com'
   }
-};
+ };
 
  const fetchData = async () => {
   setIsLoading(true);
