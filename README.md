@@ -1,6 +1,6 @@
 # React Native Job Finder App
 
-This app was built with React Native, and is meant to showcase the code a link to my QR code where you can view the app. There will
+This app was built with React Native, and is meant to showcase my code. A link to my QR code where you can view the app is to the right. There will
 be screenshots of the app included in case you aren't able to get the QR code working.
 
 ## Things I learned from this project
