@@ -7,12 +7,12 @@ be screenshots of the app included in case you aren't able to get the QR code wo
 
 Skills learned: 
 How to...
-• Develop visually appealing UI/UX designs
-• Fetch data from an external API and integrate it
-• Implement search and pagination to improve performance and UX
-• Create custom hooks for fetching data from APIs to reuse throughout the entire application
-• Use stylesheets in react native 
-• Have clean, maintainable, and organized code with proper structure.
+* Develop visually appealing UI/UX designs
+* Fetch data from an external API and integrate it
+* Implement search and pagination to improve performance and UX
+* Create custom hooks for fetching data from APIs to reuse throughout the entire application
+* Use stylesheets in react native 
+* Have clean, maintainable, and organized code with proper structure.
 
 ## Instructions to clone code
 
