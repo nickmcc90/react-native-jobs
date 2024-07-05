@@ -22,3 +22,6 @@ How to...
 git clone https://github.com/nickmcc90/react-native-jobs.git
 cd project_react_native_jobs
 ```
+
+## How to view the app
+Make sure you have the expo app downloaded on your phone on the app store or google play store. When you scan the QR code given from the link in the description, it will open up my designs in the expo app.
